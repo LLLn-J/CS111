@@ -1,0 +1,43 @@
+Problem Set 3, Problem 1 - Tracing Recursion
+
+1-1: mystery(a,b)
+
+mystery(0,9)
+return 24
+
+mystery(0,9)
+  a  |  b  |  myst_rest
+---------------------------
+  0  |  9  |  mystery(1,7)
+    return 9+15
+
+    mystery(1,7)
+	  a  |  b  |  myst_rest
+	-------------------------
+	  1  |  7  |  mystery(2,5)
+		return 7+8
+
+	    mystery(2,5)
+          a  |  b  |  myst_rest
+        -------------------------
+          2  |  5  |  mystery(3,3)
+            return 5+3
+
+            mystery(3,3)
+              a  |  b
+            -------------
+              3  |  3
+                return 3
+
+
+1-2 What is the value returned by mystery(0, 9)?
+mystery(0, 9) returns 24
+
+1-3 5.
+
+1-4 when a = 1, b = 0, that is mystery(1,0) will produce infinite recursion,
+because as the problem claims that when a=b-3^n the function will return a certain number,
+if the a and b do not fit the equation, it will produce an infinite recursion.
+
+
+
