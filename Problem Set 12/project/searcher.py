@@ -28,7 +28,13 @@ class Searcher:
         """ takes a State object called state and returns True if the called
         Searcher should add state to its list of untested states, and False otherwise.
         """
-        return not state.num_moves > self.depth_limit and not state.creates_cycle()
+        return not (state.num_moves > self.depth_limit and state.creates_cycle())
+
+    def add_state(self, new_state):
+        """ adds takes a single State object called new_state and adds it to the
+        Searcher‘s list of untested states.
+        """
+        self.states += [new_state]
 
     def __repr__(self):
         """ returns a string representation of the Searcher object
@@ -43,6 +49,27 @@ class Searcher:
         else:
             s += 'depth limit = ' + str(self.depth_limit)
         return s
+
+    def add_states(self, new_states):
+        """ takes a list State objects called new_states, and that
+        processes the elements of new_states one at a time
+        """
+        for s in new_states:
+            if self.should_add(s):
+                self.add_state(s)
+
+    def next_state(self):
+        """ chooses the next state to be tested from the list of
+            untested states, removing it from the list and returning it
+        """
+        s = random.choice(self.states)
+        self.states.remove(s)
+        return s
+
+    def find_solution(self, init_state):
+        """ performs a full random state-space search, stopping when the
+        goal state is found or when the Searcher runs out of untested states.
+        """
 
 
 ### Add your BFSeacher and DFSearcher class definitions below. ###
