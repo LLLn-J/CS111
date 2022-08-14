@@ -1,20 +1,15 @@
-#
+# Hu Xuan 8/3/2022
+# xuanh@bu.edu
+# Final project
 # eight_puzzle.py (Final Project)
-#
 # driver/test code for state-space search on Eight Puzzles
-#
-# name: 
-# email:
-#
-# If you worked with a partner, put his or her contact info below:
-# partner's name:
-# partner's email:
-#
+
 
 from searcher import *
 from timer import *
 
-def create_searcher(algorithm, depth_limit = -1, heuristic = None):
+
+def create_searcher(algorithm, depth_limit=-1, heuristic=None):
     """ a function that creates and returns an appropriate
         searcher object, based on the specified inputs. 
         inputs:
@@ -29,25 +24,26 @@ def create_searcher(algorithm, depth_limit = -1, heuristic = None):
         the function returns None.
     """
     searcher = None
-    
+
     if algorithm == 'random':
         searcher = Searcher(depth_limit)
-## You will uncommment the following lines as you implement
-## other algorithms.
-    #elif algorithm == 'BFS':
+    ## You will uncommment the following lines as you implement
+    ## other algorithms.
+    # elif algorithm == 'BFS':
     #    searcher = BFSearcher(depth_limit)
-    #elif algorithm == 'DFS':
+    # elif algorithm == 'DFS':
     #    searcher = DFSearcher(depth_limit)
-    #elif algorithm == 'Greedy':
+    # elif algorithm == 'Greedy':
     #    searcher = GreedySearcher(depth_limit, heuristic)
-    #elif algorithm == 'A*':
+    # elif algorithm == 'A*':
     #    searcher = AStarSearcher(depth_limit, heuristic)
-    else:  
+    else:
         print('unknown algorithm:', algorithm)
 
     return searcher
 
-def eight_puzzle(init_boardstr, algorithm, depth_limit = -1, heuristic = None):
+
+def eight_puzzle(init_boardstr, algorithm, depth_limit=-1, heuristic=None):
     """ a driver function for solving Eight Puzzles using state-space search
         inputs:
           * init_boardstr - a string of digits specifying the configuration
@@ -68,7 +64,7 @@ def eight_puzzle(init_boardstr, algorithm, depth_limit = -1, heuristic = None):
     soln = None
     timer = Timer(algorithm)
     timer.start()
-    
+
     try:
         soln = searcher.find_solution(init_state)
     except KeyboardInterrupt:

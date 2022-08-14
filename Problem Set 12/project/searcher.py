@@ -70,6 +70,14 @@ class Searcher:
         """ performs a full random state-space search, stopping when the
         goal state is found or when the Searcher runs out of untested states.
         """
+        self.add_state(init_state)
+        while self.states != []:
+            s = self.next_state()
+            if s.is_goal():
+                return s
+            else:
+                self.add_states(s.generate_successors())
+        return None
 
 
 ### Add your BFSeacher and DFSearcher class definitions below. ###
@@ -101,4 +109,11 @@ class GreedySearcher(Searcher):
         s += 'heuristic ' + self.heuristic.__name__
         return s
 
+
 ### Add your AStarSeacher class definition below. ###
+
+b = Board('142305678')
+s = State(b, None, 'init')
+searcher = Searcher(-1)
+goal = searcher.find_solution(s)
+goal

@@ -70,7 +70,7 @@ class State:
     def is_goal(self):
         """ returns True if the called State object is a goal state, and False otherwise.
         """
-        return self.board == GOAL_TILES
+        return self.board.tiles == GOAL_TILES
 
     def generate_successors(self):
         """ creates and returns a list of State objects for all successor states of the called State object.
@@ -82,3 +82,15 @@ class State:
                 new_state = State(b, self, m)
                 successors += [new_state]
         return successors
+
+    def print_moves_to(self):
+        """ prints the sequence of moves that lead from the initial state
+        to the called State object (i.e., to self).
+        """
+        if self.num_moves == 0:
+            print('initial state:')
+            print(self.board)
+        else:
+            self.predecessor.print_moves_to()
+            print('move the blank ' + self.move + ':')
+            print(self.board)
