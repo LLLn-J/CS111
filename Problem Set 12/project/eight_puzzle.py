@@ -16,8 +16,7 @@ def create_searcher(algorithm, depth_limit=-1, heuristic=None):
           * algorithm - a string specifying which algorithm the searcher
               should implement
           * depth_limit - an optional parameter that can be used to
-            specify a depth limit 
-          * heuristic - an optional parameter that can be used to pass
+            specify a depth limit          * heuristic - an optional parameter that can be used to pass
             in a heuristic function
             
         Note: If an unknown value is passed in for the algorithm parameter,
