@@ -28,14 +28,14 @@ def create_searcher(algorithm, depth_limit=-1, heuristic=None):
         searcher = Searcher(depth_limit)
     ## You will uncommment the following lines as you implement
     ## other algorithms.
-    # elif algorithm == 'BFS':
-    #    searcher = BFSearcher(depth_limit)
-    # elif algorithm == 'DFS':
-    #    searcher = DFSearcher(depth_limit)
-    # elif algorithm == 'Greedy':
-    #    searcher = GreedySearcher(depth_limit, heuristic)
-    # elif algorithm == 'A*':
-    #    searcher = AStarSearcher(depth_limit, heuristic)
+    elif algorithm == 'BFS':
+        searcher = BFSearcher(depth_limit)
+    elif algorithm == 'DFS':
+        searcher = DFSearcher(depth_limit)
+    elif algorithm == 'Greedy':
+        searcher = GreedySearcher(depth_limit, heuristic)
+    elif algorithm == 'A*':
+        searcher = AStarSearcher(depth_limit, heuristic)
     else:
         print('unknown algorithm:', algorithm)
 
@@ -80,3 +80,44 @@ def eight_puzzle(init_boardstr, algorithm, depth_limit=-1, heuristic=None):
         show_steps = input('Show the moves (y/n)? ')
         if show_steps == 'y':
             soln.print_moves_to()
+
+
+def process_file(filename, algorithm, depth_limit=-1, heuristic=None):
+    """  open the file with the specified filename for reading, and it should use a
+    loop to process the file one line at a time.
+    """
+    f = open(filename, 'r')
+    solved = 0
+    count_moves = 0
+    count_states = 0
+    for line in f.readlines():
+        line = line[:-1]
+
+        init_board = Board(line)
+        s = State(init_board, None, 'init')
+
+        searcher = create_searcher(algorithm, depth_limit, heuristic)
+        soln = None
+        term = False
+        try:
+            soln = searcher.find_solution(s)
+        except KeyboardInterrupt:
+            print(line + ': search terminated, ', end='')
+            term = True
+
+        if soln == None and term == False:
+            print(line + ': no solution')
+        elif term == True:
+            print('no solution')
+        else:
+            solved += 1
+            print(line + ': ' + str(soln.num_moves) + ' moves, ' + str(searcher.num_tested) + ' states tested')
+            count_moves += soln.num_moves
+            count_states += searcher.num_tested
+    print()
+    if solved == 0:
+        print('solved 0 puzzles')
+    else:
+        print('solved ' + str(solved) + ' puzzles')
+        print('averages: ' + str(count_moves / solved) + ' moves, ' + str(count_states / solved) + ' states tested')
+    f.close()

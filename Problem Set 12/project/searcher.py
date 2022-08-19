@@ -28,7 +28,11 @@ class Searcher:
         """ takes a State object called state and returns True if the called
         Searcher should add state to its list of untested states, and False otherwise.
         """
-        return not (state.num_moves > self.depth_limit and state.creates_cycle())
+        if state.creates_cycle():
+            return False
+        if state.num_moves > self.depth_limit and self.depth_limit != -1:
+            return False
+        return True
 
     def add_state(self, new_state):
         """ adds takes a single State object called new_state and adds it to the
@@ -73,20 +77,48 @@ class Searcher:
         self.add_state(init_state)
         while self.states != []:
             s = self.next_state()
+            self.num_tested += 1
             if s.is_goal():
                 return s
             else:
                 self.add_states(s.generate_successors())
+
         return None
 
 
 ### Add your BFSeacher and DFSearcher class definitions below. ###
+
+class BFSearcher(Searcher):
+    def next_state(self):
+        """ Rather than choosing at random from the list of untested states, this
+        version of next_state should follow FIFO (first-in first-out) ordering
+        """
+        s = self.states[0]
+        self.states.remove(s)
+
+        return s
+
+
+class DFSearcher(Searcher):
+    def next_state(self):
+        """  The necessary steps are very similar to the ones that you took for BFSearcher,
+        but the next_state() method should follow LIFO (last-in first-out) ordering – choosing
+        the state that was most recently added to the list.
+        """
+        s = self.states[-1]
+        self.states.remove(s)
+
+        return s
 
 
 def h0(state):
     """ a heuristic function that always returns 0 """
     return 0
 
+
+def h1(state):
+    """ a heuristic function that always returns 1 """
+    return state.board.num_misplaced()
 
 ### Add your other heuristic functions here. ###
 
@@ -97,6 +129,16 @@ class GreedySearcher(Searcher):
     """
 
     ### Add your GreedySearcher method definitions here. ###
+    def __init__(self, depth_limit, heuristic):
+        """ constructor for a GreedySearcher object
+            inputs:
+             * depth_limit - the depth limit of the searcher
+             * heuristic - a reference to the function that should be used
+             when computing the priority of a state
+        """
+        # add code that calls the superclass constructor
+        super(GreedySearcher, self).__init__(depth_limit)
+        self.heuristic = heuristic
 
     def __repr__(self):
         """ returns a string representation of the GreedySearcher object
@@ -109,11 +151,40 @@ class GreedySearcher(Searcher):
         s += 'heuristic ' + self.heuristic.__name__
         return s
 
+    def priority(self, state):
+        """ takes a State object called state, and that computes and returns the priority of that state.
+        """
+        priority = -1 * self.heuristic(state)
+        return priority
+
+    def add_state(self, state):
+        """ Rather than simply adding the specified state to the list of untested states, the method
+         should add a sublist that is a [priority, state] pair, where priority is the priority of state,
+          as determined by calling the priority method.
+        """
+        self.states += [[self.priority(state), state]]
+
+    def next_state(self):
+        """ This version of next_state should choose one of the states with the highest priority. """
+        s = max(self.states)
+        self.states.remove(s)
+
+        return s[1]
+
 
 ### Add your AStarSeacher class definition below. ###
 
-b = Board('142305678')
+class AStarSearcher(GreedySearcher):
+    def priority(self, state):
+        """ takes a State object called state, and that computes and returns the priority of that state.
+        """
+        priority = -1 * (self.heuristic(state) + state.num_moves)
+        return priority
+
+
+b = Board('142358607')
 s = State(b, None, 'init')
-searcher = Searcher(-1)
-goal = searcher.find_solution(s)
-goal
+a = AStarSearcher(-1, h1)
+a.add_state(s)
+succ = s.generate_successors()
+a.add_state(succ[1])
